@@ -137,7 +137,7 @@ function draw() {
 produit le résultat suivant :
 
 <center>
-    <video controls src="/videos/mouse.mp4" poster="/images/apercu.png" width=800 height=auto></video>
+    <video controls src="./videos/mouse.mp4" poster="/images/apercu.png" width=800 height=auto></video>
 </center>
 
 Pour le clavier, on peut utiliser la fonction **keyPressed** comme dans l'exemple :
@@ -180,7 +180,7 @@ function keyPressed() {
 qui produit le résultat :
 
 <center>
-    <video controls src="/videos/clavier.mp4" poster="/images/apercu.png" width=800 height=auto></video>
+    <video controls src="./videos/clavier.mp4" poster="/images/apercu.png" width=800 height=auto></video>
 </center>
 
 !!! note "Déclaration de variables"
@@ -242,7 +242,7 @@ function draw() {
 qui produit le résultat :
 
 <center>
-    <video controls src="/videos/load.mp4" poster="/images/apercu.png" width=800 height=auto></video>
+    <video controls src="./videos/load.mp4" poster="/images/apercu.png" width=800 height=auto></video>
 </center>
 
 !!! warning
