@@ -274,6 +274,7 @@ let video;
 function setup() {
   createCanvas(640, 480);
   video = createCapture(VIDEO);
+  video.hide();
 }
 
 function draw() {
@@ -285,5 +286,6 @@ function draw() {
 <script src="./files/webcam/p5.js"></script>
 <script src="./files/webcam/webcam.js"></script>
 
-<div id="webcam">
-</div>
+<center>
+    <div id="webcam"></div>
+</center>
