@@ -201,7 +201,7 @@ On souhaite importer l'image :
     <img src="./images/guitare.png" alt="image" width="200" height="auto">
 </center>
 
-que vous pouvez télécharger [ici](/images/guitare.png).
+que vous pouvez télécharger [ici](./images/guitare.png).
 
 Pour importer cette image, cliquez sur l'extension de la barre latérale grâce au bouton situé sous le symbole **Lecture**.
 
@@ -226,7 +226,7 @@ Le code ci-dessous en montre une utilisation simple.
 let img;
 
 function preload(){
-  img = loadImage('/images/guitare.png');
+  img = loadImage('./images/guitare.png');
 }
 
 function setup() {
@@ -242,7 +242,7 @@ function draw() {
 qui produit le résultat :
 
 <center>
-    <video controls src="./videos/load.mp4" poster="/images/apercu.png" width=800 height=auto></video>
+    <video controls src="./videos/load.mp4" poster="./images/apercu.png" width=800 height=auto></video>
 </center>
 
 !!! warning
@@ -255,3 +255,35 @@ qui produit le résultat :
     Il est possible de redimensionner l'image passée en argument.
 
 ### Flux vidéo
+
+Il est également possible de récupérer le flux d'une Webcam et de l'afficher dans le Canvas avec les fonctions suivantes :
+
+- **createCapture** : à laquelle on fournit l'argument **VIDEO** ;
+- **image** : pour afficher l'image associée à la capture vidéo.
+
+!!! warning "Attention"
+
+    Il est important de cacher la vidéo capturée sous peine d'avoir deux version de l'image superposées.
+
+Le code suivant permet d'afficher le flux associé à la Webcam :
+
+``` javascript title="Affichage de la webcam"
+
+let video;
+
+function setup() {
+  createCanvas(640, 480);
+  video = createCapture(VIDEO);
+}
+
+function draw() {
+  background(220);
+  image(video, 0, 0);
+}
+```
+
+<script src="./files/webcam/p5.js"></script>
+<script src="./files/webcam/webcam.js"></script>
+
+<div id="webcam">
+</div>
