@@ -1,6 +1,6 @@
-# Le langage P5JS
+# Javascript et IA
 
-## Introduction
+## Introduction au langage P5JS
 
 ### Préparatifs
 
@@ -188,7 +188,7 @@ qui produit le résultat :
     Remarquez que pour déclarer des variables, on utilise le mot clé `let`.  
     On déclare plutôt les variables en global pour pouvoir les utiliser dans plusieurs fonctions.
 
-## Les images
+## Images et P5JS
 
 ### Chargement et affichage
 
@@ -283,9 +283,203 @@ function draw() {
 }
 ```
 
-<script src="./files/webcam/p5.js"></script>
-<script src="./files/webcam/webcam.js"></script>
+qui produit le résultat :
 
 <center>
-    <div id="webcam"></div>
+    <video controls src="./videos/webcam.mp4" poster="./images/apercu.png" width=800 height=auto></video>
 </center>
+
+## Intelligence artificielle
+
+### La bibliothèque ML5
+
+ML5.js vise à rendre l'apprentissage automatique (machine learning) accessible à un large public d'artistes, de codeurs créatifs et d'étudiants. La bibliothèque donne accès aux algorithmes et modèles d'apprentissage automatique dans le navigateur, en s'appuyant sur TensorFlow.js sans aucune autre dépendance externe.
+
+Pour pouvoir utiliser cette bibliothèque, il faut la relier à notre **sketch** en modifiant la page **index.html**.
+
+Commencez par ouvrir l'arborescence de gauche :
+
+<center>
+    <img src="./images/upload.png" alt="image" width="800" height="auto">
+</center>
+
+ouvrez le fichier **index.html** et ajoutez la ligne :
+
+``` html title="Lier la bibliothèque"
+
+<script src="https://unpkg.com/ml5@1/dist/ml5.min.js"></script>
+
+```
+
+<center>
+    <img src="./images/linkml5.png" alt="image" width="800" height="auto">
+</center>
+
+Une fois liée, il est possible d'utiliser cette bibliothèque pour reconnaître des images.
+
+### Reconnaissance d'image
+
+La reconnaissance d'image consiste à associer un nom à une image de façon à ce que ce nom soit cohérent avec ce que représente l'image.
+Il y a donc l'idée de probabilité derrière la reconnaissance d'image et la performance d'un modèle se mesure donc sur sa capacité à ne pas commettre d'erreur.  
+
+La bibliothèque ML5 propose plusieurs modèles dont **MobileNet** basée sur une collection d'images labélisées appelée **ImageNet**.  
+On peut retrouver une partie de cette collection à l'adresse [MobileNet Sample](https://github.com/EliSchwartz/imagenet-sample-images/blob/master/gallery.md).
+
+#### MobileNet
+
+Pour charger le modèle **MobileNet** on utilise une variable `classifier` que l'on affecte à ce modèle depuis la fonction **preload** :
+
+``` javascript title="Chargement de MobileNet"
+
+let classifier;
+
+function preload() {
+  classifier = ml5.imageClassifier("MobileNet");
+}
+```
+
+on charge ensuite une image et on l'affiche dans le canvas :
+
+``` javascript title="Chargement d'une image"
+
+let classifier;
+let img;
+
+function preload() {
+  classifier = ml5.imageClassifier("MobileNet");
+  img = loadImage('./images/guitare.png');
+}
+
+% ...
+
+function draw() {
+  background(220);
+  image(img, 0, 0, 400, 400);
+}
+```
+
+et enfin on évalue cette image avec la méthode **classify** :
+
+``` javascript title="Classification"
+
+let classifier;
+let img;
+
+function preload() {
+  classifier = ml5.imageClassifier("MobileNet");
+  img = loadImage('./images/guitare.png');
+}
+
+function gotResults(results) {
+  console.log(results);
+}
+
+function setup() {
+  createCanvas(400, 400);
+  classifier.classify(img, gotResults);
+}
+
+function draw() {
+  background(220);
+  image(img, 0, 0, 400, 400);
+}
+```
+
+On obtient à la fin :
+
+<center>
+    <video controls src="./videos/classify.mp4" poster="./images/apercu.png" width=800 height=auto></video>
+</center>
+
+!!! important
+
+    La fonction **classify** prend deux arguments :
+
+      - l'image à classifier ;
+      - une fonction de traitement à exécutée après la classification.
+
+    Cette fonction de traitement possède un argument qui est un tableau des différentes propositions de classification.
+
+On peut améliorer la présentation avec un affichage personnalisé via le code : 
+
+``` javascript title="Customisation de l'affichage"
+
+function gotResults(results) {
+  label = results[0].label;
+}
+
+% ...
+
+function draw() {
+  background(220);
+  image(img, 0, 0, 400, 400);
+
+  fill(0);
+  rectMode(CENTER);
+  rect(width/2, height-50, width, 50);
+
+  fill(255);
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  text(label, width/2, height-50);
+}
+
+```
+
+<center>
+    <video controls src="./videos/classify2.mp4" poster="./images/apercu.png" width=800 height=auto></video>
+</center>
+
+on voit alors que le modèle ne fournit pas toujours une réponse exacte.  
+
+Il est possible de classifier une image provenant d'une webcam en adaptant le code précédent pour un flux vidéo.  
+On utilise alors la fonction **classifyStart** plutôt que **classify** pour que la classification se réalise de manière continue.
+
+``` javascript title="Classification d'un flux vidéo"
+
+let classifier;
+let video;
+let label = "En attente...";
+
+function preload() {
+  classifier = ml5.imageClassifier("MobileNet");
+}
+
+function gotResults(results) {
+  label = results[0].label;
+}
+
+function setup() {
+  createCanvas(640, 480);
+  video = createCapture(VIDEO);
+  video.hide();
+  classifier.classifyStart(video, gotResults);
+}
+
+function draw() {
+  background(220);
+  image(video, 0, 0, 640, 480);
+  fill(0);
+  rectMode(CENTER);
+  rect(width/2, height-50, width, 50);
+  fill(255);
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  noStroke();
+  text(label, width/2, height-50);
+}
+```
+
+<center>
+    <video controls src="./videos/classify3.mp4" poster="./images/apercu.png" width=800 height=auto></video>
+</center>
+
+#### Teachable machine
+
+On vient de voir que les modèles prédéfinis ne sont pas aussi performant qu'espéré.  
+Aussi pour certains projets plus spécifiques, il peut être utile de définir son propre modèle pour accroître l'efficacité de la classification.  
+
+Cela est possible grâce à l'outil en ligne **teachablemachine** que vous retrouverez en cliquant [ici](https://teachablemachine.withgoogle.com/).  
+Cet outil permet de créer son propre modèle en associant à une collection d'images un label précis. On parle alors de données labélisées.
+
+Voici un exemple concret de son utilisation :
