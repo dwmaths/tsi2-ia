@@ -483,3 +483,7 @@ Cela est possible grâce à l'outil en ligne **teachablemachine** que vous retro
 Cet outil permet de créer son propre modèle en associant à une collection d'images un label précis. On parle alors de données labélisées.
 
 Voici un exemple concret de son utilisation :
+
+<center>
+    <video controls src="./videos/teachable.mp4" poster="./images/apercu.png" width=800 height=auto></video>
+</center>
